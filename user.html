@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4484059199027769"
+     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Data Mind - User Profile</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="User Profile on The Data Mind - imabd.site. View author posts and profile.">
+    <meta name="keywords" content="User, Author, Profile, AI, Machine Learning, Data Science, imabd.site, The Data Mind, Community, Blog, Technology, Analytics">
+    <meta name="author" content="The Data Mind">
+    <link rel="canonical" href="https://imabd.site/user.html">
+    <meta name="robots" content="index, follow">
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="User Profile - The Data Mind">
+    <meta property="og:description" content="User Profile on The Data Mind - imabd.site. View author posts and profile.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://imabd.site/user.html">
+    <meta property="og:image" content="https://imabd.site/card.png">
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="User Profile - The Data Mind">
+    <meta name="twitter:description" content="User Profile on The Data Mind - imabd.site. View author posts and profile.">
+    <meta name="twitter:image" content="https://imabd.site/card.png">
+    <meta name="twitter:site" content="@imabdsite">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>The Data Mind</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="profile.html" class="nav-link" id="profile-link" style="display: none;">Profile</a>
+                <a href="login.html" class="nav-link" id="login-link">Login</a>
+                <a href="signup.html" class="nav-link" id="signup-link">Sign Up</a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- User Profile Header -->
+            <div class="profile-header">
+                <div class="profile-avatar" id="user-profile-avatar">
+                    <!-- Initials will be set here -->
+                </div>
+                <h2 class="profile-name" id="user-profile-name">Loading...</h2>
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <div class="profile-stat-number" id="user-post-count">0</div>
+                        <div class="profile-stat-label">Posts</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-number" id="user-follower-count">0</div>
+                        <div class="profile-stat-label">Followers</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-number" id="user-following-count">0</div>
+                        <div class="profile-stat-label">Following</div>
+                    </div>
+                </div>
+                <button class="follow-btn" id="follow-btn" style="display: none;" onclick="toggleFollow()">
+                    Follow
+                </button>
+            </div>
+
+            <!-- User Posts -->
+            <div class="user-posts">
+                <h3>Posts by <span id="posts-by-name">this user</span></h3>
+                <div class="posts-container" id="user-posts-container">
+                    <!-- User posts will be loaded here -->
+                </div>
+                <div class="loading" id="user-posts-loading">
+                    <div class="spinner"></div>
+                    <p>Loading posts...</p>
+                </div>
+                <div class="no-posts" id="user-no-posts" style="display: none;">
+                    <i class="fas fa-edit"></i>
+                    <h3>No posts yet</h3>
+                    <p>This user hasn't published any posts yet.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy policy.html">Privacy Policy</a>
+        </div>
+        <div class="footer-social">
+            <a href="https://github.com/" target="_blank" aria-label="GitHub"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.184 6.839 9.504.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.157-1.11-1.465-1.11-1.465-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.339-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.025A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.295 2.748-1.025 2.748-1.025.546 1.378.203 2.397.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.847-2.338 4.695-4.566 4.944.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.749 0 .267.18.579.688.481C19.138 20.2 22 16.447 22 12.021 22 6.484 17.523 2 12 2z"/></svg></a>
+            <a href="https://twitter.com/" target="_blank" aria-label="Twitter"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557a9.83 9.83 0 0 1-2.828.775 4.932 4.932 0 0 0 2.165-2.724c-.951.564-2.005.974-3.127 1.195a4.916 4.916 0 0 0-8.38 4.482C7.691 8.095 4.066 6.13 1.64 3.161c-.542.929-.856 2.01-.857 3.17 0 2.188 1.115 4.117 2.823 5.254a4.904 4.904 0 0 1-2.229-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.936 4.936 0 0 1-2.224.084c.627 1.956 2.444 3.377 4.6 3.417A9.867 9.867 0 0 1 0 21.543a13.94 13.94 0 0 0 7.548 2.209c9.057 0 14.009-7.496 14.009-13.986 0-.21-.005-.423-.015-.633A9.936 9.936 0 0 0 24 4.557z"/></svg></a>
+            <a href="https://linkedin.com/" target="_blank" aria-label="LinkedIn"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm15.5 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.968v5.699h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.039 0 3.6 2.001 3.6 4.601v5.595z"/></svg></a>
+        </div>
+        <div class="footer-copy">&copy; 2024 The Data Mind. All rights reserved.</div>
+    </footer>
+
+    <script src="firebase-config.js"></script>
+    <script src="cache.js"></script>
+    <script>
+        // Global variables
+        let currentUser = null;
+        let targetUser = null;
+        let targetUserData = null;
+        let userPosts = [];
+        let isFollowing = false;
+
+        // DOM elements
+        const userProfileAvatar = document.getElementById('user-profile-avatar');
+        const userProfileName = document.getElementById('user-profile-name');
+        const userPostCount = document.getElementById('user-post-count');
+        const userFollowerCount = document.getElementById('user-follower-count');
+        const userFollowingCount = document.getElementById('user-following-count');
+        const followBtn = document.getElementById('follow-btn');
+        const userPostsContainer = document.getElementById('user-posts-container');
+        const userPostsLoading = document.getElementById('user-posts-loading');
+        const userNoPosts = document.getElementById('user-no-posts');
+        const postsByName = document.getElementById('posts-by-name');
+        const profileLink = document.getElementById('profile-link');
+        const loginLink = document.getElementById('login-link');
+        const signupLink = document.getElementById('signup-link');
+
+        // Initialize user profile
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeUserProfile();
+            setupEventListeners();
+        });
+
+        // Prevent accidental follow clicks until state is loaded
+        if (followBtn) {
+            followBtn.disabled = true;
+        }
+
+        // Initialize user profile
+        function initializeUserProfile() {
+            // Get author name from URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const authorName = urlParams.get('author');
+            
+            if (!authorName) {
+                showError('No user specified.');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+                return;
+            }
+
+            // Check authentication state
+            auth.onAuthStateChanged(async (user) => {
+                currentUser = user;
+                updateNavigation();
+                
+                if (user) {
+                    await loadTargetUserData(authorName);
+                    await checkFollowStatus();
+                } else {
+                    await loadTargetUserData(authorName);
+                }
+                
+                await loadUserPosts(authorName);
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Mobile menu toggle
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        }
+
+        // Update navigation based on authentication
+        function updateNavigation() {
+            if (currentUser) {
+                profileLink.style.display = 'inline';
+                loginLink.style.display = 'none';
+                signupLink.style.display = 'none';
+            } else {
+                profileLink.style.display = 'none';
+                loginLink.style.display = 'inline';
+                signupLink.style.display = 'inline';
+            }
+        }
+
+        // Load target user data
+        async function loadTargetUserData(authorName) {
+            try {
+                // Find user by display name
+                const usersSnapshot = await db.collection('users')
+                    .where('displayName', '==', authorName)
+                    .limit(1)
+                    .get();
+
+                if (usersSnapshot.empty) {
+                    showError('User not found.');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                    return;
+                }
+
+                const userDoc = usersSnapshot.docs[0];
+                targetUser = userDoc.id;
+                targetUserData = userDoc.data();
+                
+                updateUserProfileDisplay();
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                showError('Failed to load user data.');
+            }
+        }
+
+        // Update user profile display
+        function updateUserProfileDisplay() {
+            if (!targetUserData) return;
+
+            const displayName = targetUserData.displayName;
+            const initials = getAuthorInitials(displayName);
+            
+            userProfileAvatar.textContent = initials;
+            userProfileName.textContent = displayName;
+            postsByName.textContent = displayName;
+            userPostCount.textContent = targetUserData.postCount || 0;
+            userFollowerCount.textContent = targetUserData.followers ? targetUserData.followers.length : 0;
+            userFollowingCount.textContent = targetUserData.following ? targetUserData.following.length : 0;
+
+            // Show follow button if user is logged in and not viewing their own profile
+            if (currentUser && currentUser.uid !== targetUser) {
+                followBtn.style.display = 'inline-block';
+                // Keep it disabled until we determine follow status
+                followBtn.disabled = true;
+            } else {
+                followBtn.style.display = 'none';
+                followBtn.disabled = true;
+            }
+        }
+
+        // Check follow status
+        async function checkFollowStatus() {
+            if (!currentUser || !targetUserData) return;
+
+            try {
+                const currentUserDoc = await db.collection('users').doc(currentUser.uid).get();
+                // If the user document doesn't exist yet, treat following as empty array (avoid crash)
+                const currentUserData = currentUserDoc.exists ? currentUserDoc.data() : { following: [] };
+
+                const following = (currentUserData && currentUserData.following) ? currentUserData.following : [];
+                isFollowing = Array.isArray(following) && following.includes(targetUser);
+                updateFollowButton();
+                // Enable the follow button now that we know the state
+                if (followBtn) followBtn.disabled = false;
+            } catch (error) {
+                console.error('Error checking follow status:', error);
+            }
+        }
+
+        // Update follow button
+        function updateFollowButton() {
+            if (!followBtn) return;
+            if (isFollowing) {
+                followBtn.textContent = 'Following';
+                followBtn.classList.add('following');
+            } else {
+                followBtn.textContent = 'Follow';
+                followBtn.classList.remove('following');
+            }
+        }
+
+        // Toggle follow
+        async function toggleFollow() {
+            if (!currentUser) {
+                showError('Please login to follow users.');
+                return;
+            }
+
+            try {
+                const currentUserRef = db.collection('users').doc(currentUser.uid);
+                const targetUserRef = db.collection('users').doc(targetUser);
+
+                // Ensure both user documents exist to avoid "No document to update"
+                const [curSnap, tarSnap] = await Promise.all([currentUserRef.get(), targetUserRef.get()]);
+                if (!curSnap.exists) {
+                    await currentUserRef.set({
+                        displayName: currentUser.displayName || (currentUser.email ? currentUser.email.split('@')[0] : ''),
+                        email: currentUser.email || '',
+                        followers: [],
+                        following: [],
+                        postCount: 0
+                    }, { merge: true });
+                }
+                if (!tarSnap.exists) {
+                    await targetUserRef.set({
+                        displayName: targetUserData ? targetUserData.displayName : '',
+                        email: targetUserData ? targetUserData.email || '' : '',
+                        followers: [],
+                        following: [],
+                        postCount: 0
+                    }, { merge: true });
+                }
+
+                if (isFollowing) {
+                    // Unfollow
+                    await currentUserRef.update({
+                        following: firebase.firestore.FieldValue.arrayRemove(targetUser)
+                    });
+
+                    await targetUserRef.update({
+                        followers: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
+                    });
+
+                    isFollowing = false;
+                } else {
+                    // Follow
+                    await currentUserRef.update({
+                        following: firebase.firestore.FieldValue.arrayUnion(targetUser)
+                    });
+
+                    await targetUserRef.update({
+                        followers: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+                    });
+
+                    isFollowing = true;
+                }
+
+                // Update UI
+                updateFollowButton();
+
+                // Reload target user data to update follower count
+                await loadTargetUserData(targetUserData ? targetUserData.displayName : postsByName.textContent);
+            } catch (error) {
+                console.error('Error toggling follow:', error);
+                showError('Failed to update follow status. Please try again.');
+            }
+        }
+
+        // Load user posts
+        async function loadUserPosts(authorName) {
+            try {
+                userPostsLoading.style.display = 'block';
+                userNoPosts.style.display = 'none';
+                userPostsContainer.innerHTML = '';
+
+                const cacheKey = `posts_by_author_${authorName}`;
+                // Try cache first (TTL 30 minutes)
+                const cached = cache.get(cacheKey);
+                if (cached && Array.isArray(cached)) {
+                    userPosts = cached;
+                    if (userPosts.length === 0) {
+                        userNoPosts.style.display = 'block';
+                    } else {
+                        renderUserPosts();
+                    }
+                    userPostsLoading.style.display = 'none';
+                    return;
+                }
+
+                const snapshot = await db.collection('posts')
+                    .where('authorName', '==', authorName)
+                    .orderBy('createdAt', 'desc')
+                    .get();
+
+                userPosts = [];
+                snapshot.forEach(doc => {
+                    const post = { id: doc.id, ...doc.data() };
+                    userPosts.push(post);
+                });
+
+                // Cache for 30 minutes
+                cache.set(cacheKey, userPosts, 1000 * 60 * 30);
+
+                if (userPosts.length === 0) {
+                    userNoPosts.style.display = 'block';
+                } else {
+                    renderUserPosts();
+                }
+            } catch (error) {
+                console.error('Error loading user posts:', error);
+                showError('Failed to load posts.');
+            } finally {
+                userPostsLoading.style.display = 'none';
+            }
+        }
+
+        // Render user posts
+        function renderUserPosts() {
+            userPostsContainer.innerHTML = '';
+            
+            userPosts.forEach(post => {
+                const postElement = createUserPostElement(post);
+                userPostsContainer.appendChild(postElement);
+            });
+        }
+
+        // Create user post element
+        function createUserPostElement(post) {
+            const postDiv = document.createElement('div');
+            postDiv.className = 'post-card';
+            
+            const formattedDate = formatDate(post.createdAt);
+            
+            postDiv.innerHTML = `
+                <div class="post-header">
+                    <div class="author-info">
+                        <h4>${post.title}</h4>
+                        <span class="post-date">${formattedDate}</span>
+                    </div>
+                </div>
+                <p class="post-content">${truncateText(post.content, 200)}</p>
+                <div class="post-stats">
+                    <div class="stats-left">
+                        <div class="stat-item">
+                            <i class="fas fa-eye"></i>
+                            <span>${post.views || 0}</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-heart"></i>
+                            <span>${post.likes || 0}</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-comment"></i>
+                            <span>${post.commentCount || 0}</span>
+                        </div>
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-btn like-btn ${post.likedBy && post.likedBy.includes(currentUser?.uid) ? 'liked' : ''}" 
+                                onclick="toggleLike('${post.id}')">
+                            <i class="fas fa-heart"></i>
+                            Like
+                        </button>
+                        <button class="action-btn share-btn" onclick="sharePost('${post.id}')">
+                            <i class="fas fa-share"></i>
+                            Share
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Add click event for post title
+            const titleElement = postDiv.querySelector('h4');
+            titleElement.style.cursor = 'pointer';
+            titleElement.addEventListener('click', () => openPostDetail(post.id));
+
+            return postDiv;
+        }
+
+        // Open post detail (reuse from app.js)
+        async function openPostDetail(postId) {
+            try {
+                const post = userPosts.find(p => p.id === postId);
+                if (!post) return;
+
+                // Create modal for post detail
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.style.display = 'block';
+                
+                const authorInitials = getAuthorInitials(post.authorName);
+                const formattedDate = formatDate(post.createdAt);
+                
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close" onclick="this.parentElement.parentElement.remove()">&times;</span>
+                        <div class="post-detail">
+                            <div class="post-header">
+                                <div class="author-avatar">${authorInitials}</div>
+                                <div class="author-info">
+                                    <h4 class="author-name" onclick="openUserProfile('${post.authorName}')">${post.authorName}</h4>
+                                    <span class="post-date">${formattedDate}</span>
+                                </div>
+                            </div>
+                            <h2 class="post-title">${post.title}</h2>
+                            <div class="post-content">${post.content}</div>
+                            <div class="post-stats">
+                                <div class="stats-left">
+                                    <div class="stat-item">
+                                        <i class="fas fa-eye"></i>
+                                        <span>${post.views || 0}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <i class="fas fa-heart"></i>
+                                        <span>${post.likes || 0}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <i class="fas fa-comment"></i>
+                                        <span>${post.commentCount || 0}</span>
+                                    </div>
+                                </div>
+                                <div class="post-actions">
+                                    <button class="action-btn like-btn ${post.likedBy && post.likedBy.includes(currentUser?.uid) ? 'liked' : ''}" 
+                                            onclick="toggleLike('${post.id}')">
+                                        <i class="fas fa-heart"></i>
+                                        Like
+                                    </button>
+                                    <button class="action-btn share-btn" onclick="sharePost('${post.id}')">
+                                        <i class="fas fa-share"></i>
+                                        Share
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+
+                // Close modal when clicking outside
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.remove();
+                    }
+                });
+
+                // Increment view count
+                await incrementViewCount(postId);
+                
+            } catch (error) {
+                console.error('Error opening post:', error);
+                showError('Failed to open post. Please try again.');
+            }
+        }
+
+        // Toggle like (reuse from app.js)
+        async function toggleLike(postId) {
+            if (!currentUser) {
+                showError('Please login to like posts.');
+                return;
+            }
+
+            try {
+                const postRef = db.collection('posts').doc(postId);
+                const postDoc = await postRef.get();
+                const postData = postDoc.data();
+                
+                const likedBy = postData.likedBy || [];
+                const isLiked = likedBy.includes(currentUser.uid);
+                
+                if (isLiked) {
+                    likedBy.splice(likedBy.indexOf(currentUser.uid), 1);
+                    await postRef.update({
+                        likes: firebase.firestore.FieldValue.increment(-1),
+                        likedBy: likedBy
+                    });
+                } else {
+                    likedBy.push(currentUser.uid);
+                    await postRef.update({
+                        likes: firebase.firestore.FieldValue.increment(1),
+                        likedBy: likedBy
+                    });
+                }
+
+                // Update UI
+                const likeBtn = document.querySelector(`[onclick="toggleLike('${postId}')"]`);
+                if (likeBtn) {
+                    likeBtn.classList.toggle('liked');
+                    const likeCount = likeBtn.parentElement.previousElementSibling.querySelector('.stat-item:nth-child(2) span');
+                    const currentLikes = parseInt(likeCount.textContent);
+                    likeCount.textContent = isLiked ? currentLikes - 1 : currentLikes + 1;
+                }
+
+            } catch (error) {
+                console.error('Error toggling like:', error);
+                showError('Failed to update like. Please try again.');
+            }
+        }
+
+        // Share post (reuse from app.js)
+        function sharePost(postId) {
+            const post = userPosts.find(p => p.id === postId);
+            if (!post) return;
+
+            const url = `${window.location.origin}/post.html?id=${postId}`;
+            const text = `Check out this post: ${post.title}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: post.title,
+                    text: text,
+                    url: url
+                });
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    showSuccess('Link copied to clipboard!');
+                }).catch(() => {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = url;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showSuccess('Link copied to clipboard!');
+                });
+            }
+        }
+
+        // Increment view count
+        async function incrementViewCount(postId) {
+            try {
+                await db.collection('posts').doc(postId).update({
+                    views: firebase.firestore.FieldValue.increment(1)
+                });
+            } catch (error) {
+                console.error('Error incrementing view count:', error);
+            }
+        }
+
+        // Open user profile
+        function openUserProfile(authorName) {
+            window.location.href = `user.html?author=${encodeURIComponent(authorName)}`;
+        }
+
+        // Utility functions
+        function getAuthorInitials(authorName) {
+            if (!authorName) return '?';
+            return authorName.split(' ').map(name => name.charAt(0)).join('').toUpperCase().substring(0, 2);
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return 'Unknown';
+            
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) return 'Just now';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+            if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+            
+            return date.toLocaleDateString();
+        }
+
+        function truncateText(text, maxLength) {
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            document.body.insertBefore(errorDiv, document.body.firstChild);
+            
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.textContent = message;
+            document.body.insertBefore(successDiv, document.body.firstChild);
+            
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        }
+
+        async function checkMessagePermission(viewedUserId) {
+            const userDoc = await db.collection('users').doc(viewedUserId).get();
+            const userData = userDoc.data();
+            let canMessage = false;
+            if (userData.privacy === 'public') {
+                canMessage = true;
+            } else if (userData.privacy === 'private' && userData.followers && currentUser && userData.followers.includes(currentUser.uid)) {
+                canMessage = true;
+            }
+            document.getElementById('message-inbox-btn').style.display = canMessage ? 'block' : 'none';
+        }
+
+        function openInboxChat() {
+            // Redirect to inbox.html with the user id as a query param
+            window.location.href = `inbox.html?user=${viewedUserId}`;
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Data Mind - Contact</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
+  <!-- SEO -->
+  <meta name="description" content="Contact The Data Mind - AI, ML, and Data Science at imabd.site.">
+  <meta name="keywords" content="Contact, AI, Machine Learning, Data Science, imabd.site">
+  <meta name="author" content="The Data Mind">
+  <link rel="canonical" href="https://imabd.site/contact.html">
+  <meta name="robots" content="index, follow">
+
+  <!-- OG -->
+  <meta property="og:title" content="Contact - The Data Mind">
+  <meta property="og:description" content="Contact The Data Mind at imabd.site.">
+  <meta property="og:image" content="https://imabd.site/card.png">
+  <meta property="og:url" content="https://imabd.site/contact.html">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Contact - The Data Mind">
+  <meta name="twitter:description" content="Reach out to The Data Mind team.">
+  <meta name="twitter:image" content="https://imabd.site/card.png">
+  <meta name="twitter:site" content="@imabdsite">
+</head>
+<body>
+
+  <!-- Header -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <h2>The Data Mind</h2>
+      </div>
+      <div class="nav-menu">
+        <a href="/" class="nav-link">Home</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="contact.html" class="nav-link active">Contact</a>
+        <a href="privacy policy.html" class="nav-link">Privacy Policy</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <div class="form-container">
+        <h2 class="form-title">Contact Us</h2>
+        <p style="text-align:center;margin-bottom:2rem;">Have a question, suggestion, or feedback? Fill out the form below and we'll get back to you soon.</p>
+
+        <form id="contact-form">
+          <input type="hidden" name="access_key" value="8847c3a9-5ac4-4b89-b85a-6bba70de7550">
+
+          <div class="form-group">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" id="name" name="name" class="form-input" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" class="form-input" required />
+          </div>
+
+          <div class="form-group">
+            <label for="message" class="form-label">Message</label>
+            <textarea id="message" name="message" class="form-input" rows="6" required></textarea>
+          </div>
+
+          <button type="submit" class="form-btn">Send Message</button>
+          <div id="form-status" style="display:none;margin-top:1rem;"></div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy policy.html">Privacy Policy</a>
+    </div>
+    <div class="footer-social">
+      <a href="https://github.com/" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://twitter.com/" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="https://linkedin.com/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+    <div class="footer-copy">&copy; 2024 The Data Mind. All rights reserved.</div>
+  </footer>
+
+  <!-- Working Web3Forms JavaScript -->
+  <script src="cache.js"></script>
+  <script>
+    const form = document.getElementById("contact-form");
+    const status = document.getElementById("form-status");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      
+      // Check if a form was recently submitted to prevent spam/duplicates
+      const lastSubmitTime = cache.get('last_contact_submit');
+      if (lastSubmitTime && (Date.now() - lastSubmitTime) < 3000) {
+        status.textContent = "⏳ Please wait a moment before submitting again.";
+        status.className = "error-message";
+        status.style.display = "block";
+        return;
+      }
+
+      status.style.display = "none";
+      status.textContent = "";
+
+      const formData = new FormData(form);
+
+      fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+        headers: { Accept: "application/json" },
+      })
+      .then(response => {
+        if (response.ok) {
+          status.textContent = "✅ Message sent successfully!";
+          status.className = "success-message";
+          status.style.display = "block";
+          form.reset();
+          // Cache the last submit time (no TTL needed, will be cleared naturally)
+          cache.set('last_contact_submit', Date.now(), 5000);
+        } else {
+          return response.json().then(data => {
+            throw new Error(data.message || "Submission failed.");
+          });
+        }
+      })
+      .catch(error => {
+        status.textContent = "❌ " + error.message;
+        status.className = "error-message";
+        status.style.display = "block";
+      });
+    });
+  </script>
+
+  <!-- Optional Success/Error Message Styling -->
+  <style>
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 1rem;
+      border-radius: 5px;
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 1rem;
+      border-radius: 5px;
+    }
+  </style>
+
+</body>
+</html>

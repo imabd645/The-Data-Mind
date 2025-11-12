@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4484059199027769"
+     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Data Mind - Profile</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Your Profile on The Data Mind - imabd.site. Manage your AI, Machine Learning, and Data Science posts and settings.">
+    <meta name="keywords" content="Profile, AI, Machine Learning, Data Science, imabd.site, The Data Mind, Community, Blog, Technology, Analytics">
+    <meta name="author" content="The Data Mind">
+    <link rel="canonical" href="https://imabd.site/profile.html">
+    <meta name="robots" content="index, follow">
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Profile - The Data Mind">
+    <meta property="og:description" content="Your Profile on The Data Mind - imabd.site. Manage your AI, Machine Learning, and Data Science posts and settings.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://imabd.site/profile.html">
+    <meta property="og:image" content="https://imabd.site/card.png">
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Profile - The Data Mind">
+    <meta name="twitter:description" content="Your Profile on The Data Mind - imabd.site. Manage your AI, Machine Learning, and Data Science posts and settings.">
+    <meta name="twitter:image" content="https://imabd.site/card.png">
+    <meta name="twitter:site" content="@imabdsite">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>The Data Mind</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="profile.html" class="nav-link active">Profile</a>
+                <a href="#" class="nav-link" onclick="logout()">Logout</a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <a class="settings-btn" href="settings.html" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </a>
+                <div class="profile-avatar" id="profile-avatar">
+                    <!-- Initials will be set here -->
+                </div>
+                <h2 class="profile-name" id="profile-name">Loading...</h2>
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <div class="profile-stat-number" id="post-count">0</div>
+                        <div class="profile-stat-label">Posts</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-number" id="follower-count">0</div>
+                        <div class="profile-stat-label">Followers</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-number" id="following-count">0</div>
+                        <div class="profile-stat-label">Following</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Posts -->
+            <div class="user-posts">
+                <h3>My Posts</h3>
+                <div class="posts-container" id="user-posts-container">
+                    <!-- User posts will be loaded here -->
+                </div>
+                <div class="loading" id="user-posts-loading">
+                    <div class="spinner"></div>
+                    <p>Loading your posts...</p>
+                </div>
+                <div class="no-posts" id="user-no-posts" style="display: none;">
+                    <i class="fas fa-edit"></i>
+                    <h3>No posts yet</h3>
+                    <p>Start sharing your knowledge!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Post Button -->
+    <button class="add-post-btn" onclick="openAddPost()">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Settings moved to settings.html -->
+
+    <!-- Add Post Modal -->
+    <div class="modal" id="add-post-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="add-post-content">
+                <h3>Create New Post</h3>
+                <form id="add-post-form">
+                    <div class="form-group">
+                        <label for="post-title" class="form-label">Title</label>
+                        <input type="text" id="post-title" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="post-content" class="form-label">Content</label>
+                        <textarea id="post-content" class="form-input" rows="10" required></textarea>
+                    </div>
+                    <button type="submit" class="form-btn">Publish Post</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy policy.html">Privacy Policy</a>
+        </div>
+        <div class="footer-social">
+            <a href="https://github.com/" target="_blank" aria-label="GitHub"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.184 6.839 9.504.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.157-1.11-1.465-1.11-1.465-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.339-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.025A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.295 2.748-1.025 2.748-1.025.546 1.378.203 2.397.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.847-2.338 4.695-4.566 4.944.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.749 0 .267.18.579.688.481C19.138 20.2 22 16.447 22 12.021 22 6.484 17.523 2 12 2z"/></svg></a>
+            <a href="https://twitter.com/" target="_blank" aria-label="Twitter"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557a9.83 9.83 0 0 1-2.828.775 4.932 4.932 0 0 0 2.165-2.724c-.951.564-2.005.974-3.127 1.195a4.916 4.916 0 0 0-8.38 4.482C7.691 8.095 4.066 6.13 1.64 3.161c-.542.929-.856 2.01-.857 3.17 0 2.188 1.115 4.117 2.823 5.254a4.904 4.904 0 0 1-2.229-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.936 4.936 0 0 1-2.224.084c.627 1.956 2.444 3.377 4.6 3.417A9.867 9.867 0 0 1 0 21.543a13.94 13.94 0 0 0 7.548 2.209c9.057 0 14.009-7.496 14.009-13.986 0-.21-.005-.423-.015-.633A9.936 9.936 0 0 0 24 4.557z"/></svg></a>
+            <a href="https://linkedin.com/" target="_blank" aria-label="LinkedIn"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm15.5 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.968v5.699h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.039 0 3.6 2.001 3.6 4.601v5.595z"/></svg></a>
+        </div>
+        <div class="footer-copy">&copy; 2024 The Data Mind. All rights reserved.</div>
+    </footer>
+
+    <script src="firebase-config.js"></script>
+    <script src="cache.js"></script>
+    <script>
+        // Global variables
+        let currentUser = null;
+        let userData = null;
+        let userPosts = [];
+
+        // DOM elements
+        const profileAvatar = document.getElementById('profile-avatar');
+        const profileName = document.getElementById('profile-name');
+        const postCount = document.getElementById('post-count');
+        const followerCount = document.getElementById('follower-count');
+        const followingCount = document.getElementById('following-count');
+        const userPostsContainer = document.getElementById('user-posts-container');
+        const userPostsLoading = document.getElementById('user-posts-loading');
+        const userNoPosts = document.getElementById('user-no-posts');
+        const addPostModal = document.getElementById('add-post-modal');
+
+        // Initialize profile
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeProfile();
+            setupEventListeners();
+        });
+
+        // Initialize profile
+        function initializeProfile() {
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    currentUser = user;
+                    await loadUserData();
+                    await loadUserPosts();
+                } else {
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+
+            // Modal close events (only add-post modal remains on this page)
+            document.querySelectorAll('.close').forEach(closeBtn => {
+                closeBtn.addEventListener('click', () => {
+                    if (addPostModal) addPostModal.style.display = 'none';
+                });
+            });
+
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === addPostModal) {
+                    addPostModal.style.display = 'none';
+                }
+            });
+
+            // Add post form submission
+            document.getElementById('add-post-form').addEventListener('submit', createPost);
+
+            // Mobile menu toggle
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        }
+
+        // Load user data
+        async function loadUserData() {
+            try {
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                
+                if (userDoc.exists) {
+                    userData = userDoc.data();
+                    updateProfileDisplay();
+                } else {
+                    // Create user document if it doesn't exist
+                    const displayName = currentUser.displayName || currentUser.email.split('@')[0];
+                    const firstName = displayName.split(' ')[0] || '';
+                    const lastName = displayName.split(' ').slice(1).join(' ') || '';
+                    
+                    userData = {
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: currentUser.email,
+                        displayName: displayName,
+                        followers: [],
+                        following: [],
+                        postCount: 0
+                    };
+                    
+                    await db.collection('users').doc(currentUser.uid).set(userData);
+                    updateProfileDisplay();
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+
+        // Update profile display
+        function updateProfileDisplay() {
+            if (!userData) return;
+
+            const displayName = userData.displayName || `${userData.firstName} ${userData.lastName}`;
+            const initials = getAuthorInitials(displayName);
+            
+            profileAvatar.textContent = initials;
+            profileName.textContent = displayName;
+            postCount.textContent = userData.postCount || 0;
+            followerCount.textContent = userData.followers ? userData.followers.length : 0;
+            followingCount.textContent = userData.following ? userData.following.length : 0;
+        }
+
+        // Load user posts
+        async function loadUserPosts() {
+            try {
+                userPostsLoading.style.display = 'block';
+                userNoPosts.style.display = 'none';
+                userPostsContainer.innerHTML = '';
+
+                const cacheKey = `user_posts_${currentUser.uid}`;
+                // Try cache first (TTL 30 minutes)
+                const cached = cache.get(cacheKey);
+                if (cached && Array.isArray(cached)) {
+                    userPosts = cached;
+                    postCount.textContent = userPosts.length;
+                    if (userPosts.length === 0) {
+                        userNoPosts.style.display = 'block';
+                    } else {
+                        renderUserPosts();
+                    }
+                    // Return early to avoid a network call
+                    userPostsLoading.style.display = 'none';
+                    return;
+                }
+
+                // No cache, fetch from Firestore and then cache
+                const snapshot = await db.collection('posts')
+                    .where('authorId', '==', currentUser.uid)
+                    .orderBy('createdAt', 'desc')
+                    .get();
+
+                userPosts = [];
+                snapshot.forEach(doc => {
+                    const post = { id: doc.id, ...doc.data() };
+                    userPosts.push(post);
+                });
+
+                // Cache results for 30 minutes
+                cache.set(cacheKey, userPosts, 1000 * 60 * 30);
+
+                // Update post counter
+                postCount.textContent = userPosts.length;
+
+                if (userPosts.length === 0) {
+                    userNoPosts.style.display = 'block';
+                } else {
+                    renderUserPosts();
+                }
+            } catch (error) {
+                console.error('Error loading user posts:', error);
+            } finally {
+                userPostsLoading.style.display = 'none';
+            }
+        }
+
+        // Render user posts
+        function renderUserPosts() {
+            userPostsContainer.innerHTML = '';
+            
+            userPosts.forEach(post => {
+                const postElement = createUserPostElement(post);
+                userPostsContainer.appendChild(postElement);
+            });
+        }
+
+        // Create user post element
+        function createUserPostElement(post) {
+            const postDiv = document.createElement('div');
+            postDiv.className = 'post-card';
+            
+            const formattedDate = formatDate(post.createdAt);
+            
+            postDiv.innerHTML = `
+                <div class="post-header">
+                    <div class="author-info">
+                        <h4>${post.title}</h4>
+                        <span class="post-date">${formattedDate}</span>
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-btn" onclick="editPost('${post.id}')">
+                            <i class="fas fa-edit"></i>
+                            Edit
+                        </button>
+                        <button class="action-btn" onclick="deletePost('${post.id}')" style="background: #dc3545; color: white;">
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+                <p class="post-content">${truncateText(post.content, 150)}</p>
+                <div class="post-stats">
+                    <div class="stats-left">
+                        <div class="stat-item">
+                            <i class="fas fa-eye"></i>
+                            <span>${post.views || 0}</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-heart"></i>
+                            <span>${post.likes || 0}</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-comment"></i>
+                            <span>${post.commentCount || 0}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            return postDiv;
+        }
+
+        // Open add post modal
+        function openAddPost() {
+            addPostModal.style.display = 'block';
+        }
+
+
+        // Create new post
+        async function createPost(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('post-title').value.trim();
+            const content = document.getElementById('post-content').value.trim();
+            
+            if (!title || !content) {
+                return;
+            }
+
+            // Ensure user is signed in
+            if (!currentUser) {
+                showError('You must be signed in to create a post.');
+                return;
+            }
+
+            try {
+                const submitBtn = e.target.querySelector('.form-btn');
+                const originalText = submitBtn ? submitBtn.textContent : '';
+                if (submitBtn) {
+                    submitBtn.textContent = 'Publishing...';
+                    submitBtn.disabled = true;
+                }
+
+                // Determine author name safely: prefer userData.displayName, then currentUser.displayName, then email prefix, then 'Anonymous'
+                const authorName = (userData && userData.displayName)
+                    || (currentUser && (currentUser.displayName || (currentUser.email ? currentUser.email.split('@')[0] : null)))
+                    || 'Anonymous';
+
+                const postData = {
+                    title: title,
+                    content: content,
+                    authorId: currentUser.uid,
+                    authorName: authorName,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    views: 0,
+                    likes: 0,
+                    commentCount: 0,
+                    likedBy: [],
+                    searchTerms: [
+                        title.toLowerCase(),
+                        content.toLowerCase(),
+                        ...title.toLowerCase().split(' '),
+                        ...content.toLowerCase().split(' ')
+                    ]
+                };
+
+                await db.collection('posts').add(postData);
+                
+                // Invalidate cache after creating post
+                invalidatePostsCache();
+                invalidateUserPostsCache(currentUser.uid);
+                if (authorName) invalidateAuthorPostsCache(authorName);
+                
+                // Update user post count (only if user document exists)
+                try {
+                    await db.collection('users').doc(currentUser.uid).update({
+                        postCount: firebase.firestore.FieldValue.increment(1)
+                    });
+                } catch (updateErr) {
+                    // If update fails (e.g., user doc doesn't exist), log but don't block post creation
+                    console.warn('Failed to update postCount for user:', updateErr);
+                }
+
+                // Reset form and close modal
+                e.target.reset();
+                addPostModal.style.display = 'none';
+                
+                // Reload user data and posts
+                await loadUserData();
+                await loadUserPosts();
+            } catch (error) {
+                console.error('Error creating post:', error);
+                showError('Failed to create post. Please try again.');
+            } finally {
+                const submitBtn = e.target.querySelector('.form-btn');
+                if (submitBtn) {
+                    submitBtn.textContent = 'Publish Post';
+                    submitBtn.disabled = false;
+                }
+            }
+        }
+
+        // Edit post
+        function editPost(postId) {
+            const post = userPosts.find(p => p.id === postId);
+            if (!post) return;
+
+            // Populate form with post data
+            document.getElementById('post-title').value = post.title;
+            document.getElementById('post-content').value = post.content;
+            
+            // Change form to edit mode
+            const form = document.getElementById('add-post-form');
+            const submitBtn = form.querySelector('.form-btn');
+            submitBtn.textContent = 'Update Post';
+            
+            // Store post ID for update
+            form.dataset.editPostId = postId;
+            
+            addPostModal.style.display = 'block';
+        }
+
+        // Delete post
+        async function deletePost(postId) {
+            if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const post = userPosts.find(p => p.id === postId);
+                
+                await db.collection('posts').doc(postId).delete();
+                
+                // Invalidate cache after deleting post
+                invalidatePostsCache();
+                invalidateUserPostsCache(currentUser.uid);
+                if (post && post.authorName) invalidateAuthorPostsCache(post.authorName);
+                invalidatePostDetailCache(postId);
+                
+                // Update user post count
+                await db.collection('users').doc(currentUser.uid).update({
+                    postCount: firebase.firestore.FieldValue.increment(-1)
+                });
+
+                await loadUserData();
+                await loadUserPosts();
+            } catch (error) {
+                console.error('Error deleting post:', error);
+            }
+        }
+
+        // Settings functions moved to settings.html
+
+        // Logout
+        async function logout() {
+            try {
+                await auth.signOut();
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+
+        // Utility functions
+        function getAuthorInitials(authorName) {
+            if (!authorName) return '?';
+            return authorName.split(' ').map(name => name.charAt(0)).join('').toUpperCase().substring(0, 2);
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return 'Unknown';
+            
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) return 'Just now';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+            if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+            
+            return date.toLocaleDateString();
+        }
+
+        function truncateText(text, maxLength) {
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+
+        async function updatePrivacySetting() {
+            const privacy = document.getElementById('privacy-toggle').value;
+            if (!currentUser) return;
+            try {
+                await db.collection('users').doc(currentUser.uid).update({ privacy: privacy });
+            } catch (e) {
+                console.error('Failed to update privacy setting.', e);
+            }
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.textContent = message;
+            document.body.insertBefore(successDiv, document.body.firstChild);
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            document.body.insertBefore(errorDiv, document.body.firstChild);
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html> 

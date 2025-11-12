@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Data Mind - Settings</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo"><h2>The Data Mind</h2></div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="profile.html" class="nav-link">Profile</a>
+                <a href="login.html" class="nav-link" id="login-link">Login</a>
+                <a href="signup.html" class="nav-link" id="signup-link">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <h2>Settings</h2>
+            <div class="settings-section">
+                <h4>Profile Settings</h4>
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label for="edit-firstName" class="form-label">First Name</label>
+                        <input type="text" id="edit-firstName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-lastName" class="form-label">Last Name</label>
+                        <input type="text" id="edit-lastName" class="form-input" required>
+                    </div>
+                    <button type="submit" class="form-btn">Update Profile</button>
+                </form>
+            </div>
+
+            <div class="settings-section">
+                <h4>Account Settings</h4>
+                <button class="form-btn" id="reset-password-btn">Send Password Reset Email</button>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <a href="profile.html">Back to Profile</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-copy">&copy; 2024 The Data Mind. All rights reserved.</div>
+    </footer>
+
+    <script src="firebase-config.js"></script>
+    <script src="cache.js"></script>
+    <script>
+        let currentUser = null;
+        let userData = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            auth.onAuthStateChanged(async (user) => {
+                currentUser = user;
+                updateNavigation();
+                if (!user) {
+                    // Redirect to login if not signed in
+                    window.location.href = 'login.html';
+                    return;
+                }
+                await loadUserData();
+                setupEventListeners();
+            });
+        });
+
+        function updateNavigation() {
+            const loginLink = document.getElementById('login-link');
+            const signupLink = document.getElementById('signup-link');
+            if (currentUser) {
+                if (loginLink) loginLink.style.display = 'none';
+                if (signupLink) signupLink.style.display = 'none';
+            } else {
+                if (loginLink) loginLink.style.display = 'inline';
+                if (signupLink) signupLink.style.display = 'inline';
+            }
+        }
+
+        async function loadUserData() {
+            try {
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                if (userDoc.exists) {
+                    userData = userDoc.data();
+                } else {
+                    const displayName = currentUser.displayName || (currentUser.email ? currentUser.email.split('@')[0] : '');
+                    const firstName = displayName.split(' ')[0] || '';
+                    const lastName = displayName.split(' ').slice(1).join(' ') || '';
+                    userData = { firstName, lastName, displayName, email: currentUser.email, followers: [], following: [], postCount: 0 };
+                    await db.collection('users').doc(currentUser.uid).set(userData, { merge: true });
+                }
+
+                // Prefill form
+                document.getElementById('edit-firstName').value = userData.firstName || '';
+                document.getElementById('edit-lastName').value = userData.lastName || '';
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                showError('Failed to load user data.');
+            }
+        }
+
+        function setupEventListeners() {
+            document.getElementById('profile-form').addEventListener('submit', updateProfile);
+            document.getElementById('reset-password-btn').addEventListener('click', sendPasswordReset);
+        }
+
+        async function updateProfile(e) {
+            e.preventDefault();
+            const firstName = document.getElementById('edit-firstName').value.trim();
+            const lastName = document.getElementById('edit-lastName').value.trim();
+            if (!firstName || !lastName) return;
+
+            try {
+                const oldDisplayName = userData.displayName;
+                const displayName = `${firstName} ${lastName}`;
+                // Update user profile
+                await currentUser.updateProfile({ displayName });
+                // Update Firestore
+                await db.collection('users').doc(currentUser.uid).update({ firstName, lastName, displayName });
+
+                // Update posts authorName
+                const postsSnapshot = await db.collection('posts').where('authorId', '==', currentUser.uid).get();
+                const batch = db.batch();
+                postsSnapshot.forEach(doc => batch.update(doc.ref, { authorName: displayName }));
+                await batch.commit();
+
+                // Invalidate relevant caches after profile update
+                cache.clear('all_posts');
+                cache.clear(`user_posts_${currentUser.uid}`);
+                if (oldDisplayName) cache.clear(`posts_by_author_${oldDisplayName}`);
+                cache.clear(`posts_by_author_${displayName}`);
+
+                // Update local data and show success
+                userData.firstName = firstName; userData.lastName = lastName; userData.displayName = displayName;
+                showSuccess('Profile updated successfully');
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showError('Failed to update profile.');
+            }
+        }
+
+        async function sendPasswordReset() {
+            try {
+                await auth.sendPasswordResetEmail(currentUser.email);
+                showSuccess('Password reset email sent! Check your inbox.');
+            } catch (error) {
+                console.error('Password reset error:', error);
+                showError('Failed to send reset email.');
+            }
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.textContent = message;
+            document.body.insertBefore(successDiv, document.body.firstChild);
+            setTimeout(() => successDiv.remove(), 3000);
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            document.body.insertBefore(errorDiv, document.body.firstChild);
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+    </script>
+</body>
+</html>
